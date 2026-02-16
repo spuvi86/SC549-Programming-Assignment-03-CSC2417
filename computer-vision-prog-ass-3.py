@@ -11,19 +11,15 @@ class SportsTracker:
         Initializes the detection and keypoint models.
         Satisfies Assignment Requirements 1 & 2.
         """
-        self.detector = YOLO(det_model_path)  # Player Detection [cite: 11]
-        self.pose_estimator = YOLO(pose_model_path)  # Keypoint Detection [cite: 13]
+        self.detector = YOLO(det_model_path)  # Player Detection 
+        self.pose_estimator = YOLO(pose_model_path)  # Keypoint Detection 
         
-        # Metrics Storage
         self.inference_times = []
         self.conf_scores = []
         self.detection_counts = []
 
     def process_collection(self, input_dir, output_dir):
-        """
-        Loops through the dataset and processes each video clip.
-        Satisfies Dataset Requirements[cite: 6, 7].
-        """
+       
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
@@ -39,25 +35,20 @@ class SportsTracker:
     def _run_inference(self, video_path, output_dir, filename):
         cap = cv2.VideoCapture(video_path)
         
-        # We capture the middle frame for the screenshot deliverable [cite: 20]
         frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_count // 2)
         
         ret, frame = cap.read()
         if ret:
-            # Step 1: Detect Players (YOLO-like) [cite: 11]
-            # Step 2: Identify Keypoints (OpenPose-like) [cite: 13]
+            
             
             start_time = time.time()
             results = self.pose_estimator.predict(frame, conf=0.5)
             end_time = time.time()
             
-            # Metrics Collection
             inference_time = (end_time - start_time) * 1000  # ms
             self.inference_times.append(inference_time)
             
-            # Extract confidence scores from Keypoints (if available) or Boxes
-            # Pose models return keypoints, but we can check box confidence too
             if results[0].boxes:
                 confs = results[0].boxes.conf.cpu().numpy()
                 if len(confs) > 0:
@@ -68,7 +59,7 @@ class SportsTracker:
             else:
                  self.detection_counts.append(0)
             
-            # Annotate and save the result
+            
             annotated_frame = results[0].plot()
             output_path = os.path.join(output_dir, f"result_{filename.split('.')[0]}.jpg")
             cv2.imwrite(output_path, annotated_frame)
@@ -76,11 +67,7 @@ class SportsTracker:
         cap.release()
 
     def plot_performance_metrics(self, output_dir):
-        """
-        Generates and saves performance comparison plots.
-        Satisfies Performance Comparison Requirements.
-        """
-        # 1. Inference Speed Comparison
+        
         plt.figure(figsize=(10, 6))
         plt.plot(self.inference_times, marker='o', linestyle='-', color='b')
         plt.title('Inference Speed per Video')
@@ -90,7 +77,7 @@ class SportsTracker:
         plt.savefig(os.path.join(output_dir, 'inference_speed_comparison.png'))
         plt.close()
 
-        # 2. Confidence Score Distribution
+        
         plt.figure(figsize=(10, 6))
         plt.hist(self.conf_scores, bins=10, color='g', alpha=0.7)
         plt.title('Confidence Score Distribution')
@@ -100,7 +87,7 @@ class SportsTracker:
         plt.savefig(os.path.join(output_dir, 'confidence_score_distribution.png'))
         plt.close()
 
-        # 3. Detections per Video
+        
         plt.figure(figsize=(10, 6))
         plt.bar(range(len(self.detection_counts)), self.detection_counts, color='r', alpha=0.7)
         plt.title('Detections per Video')
@@ -113,15 +100,9 @@ class SportsTracker:
         print(f"Performance plots saved to {output_dir}")
 
     def evaluate_model(self, data_yaml):
-        """
-        Evaluates the model on a labeled dataset.
-        Generates Accuracy, Precision, Recall, and Loss metrics.
-        Satifies Performance Comparison Requirements (Accuracy, Precision, Recall, Loss).
-        """
+        
         print(f"Starting evaluation on dataset: {data_yaml}")
         try:
-            # Run validation
-            # This automatically generates P_curve.png, R_curve.png, confusion_matrix.png, etc.
             metrics = self.pose_estimator.val(data=data_yaml)
             
             print("\nEvaluation Complete!")
@@ -145,7 +126,7 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
 
-    # Configure your paths here
+    
     INPUT_VIDEOS = 'video_clips' 
     OUTPUT_RESULTS = 'output'
     

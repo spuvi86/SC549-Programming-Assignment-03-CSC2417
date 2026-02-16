@@ -57,9 +57,7 @@ def extract_frames(video_dir, output_dir, frames_per_video=10):
     print(f"\nExtraction complete. Images saved to: {output_dir}")
 
 if __name__ == "__main__":
-    # Configuration
     VIDEO_DIR = 'video_clips'
-    # Saving to 'val' so it can be used immediately for evaluation after labeling
     OUTPUT_DIR = os.path.join('datasets', 'sports', 'images', 'val')
     
     extract_frames(VIDEO_DIR, OUTPUT_DIR, frames_per_video=5)

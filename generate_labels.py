@@ -3,15 +3,6 @@ import os
 import glob
 
 def generate_labels(images_dir, labels_dir, model_path='yolo11n-pose.pt'):
-    """
-    Generates pseudo-labels for images using a pre-trained YOLO model.
-    Saves validation labels in YOLO format (.txt).
-    
-    Args:
-        images_dir (str): Directory containing images.
-        labels_dir (str): Directory to save generated labels.
-        model_path (str): Path to the YOLO model.
-    """
     model = YOLO(model_path)
     
     if not os.path.exists(labels_dir):
