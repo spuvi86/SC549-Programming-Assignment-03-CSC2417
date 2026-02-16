@@ -1,0 +1,17 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# Sports Dataset (Custom)
+# Images extracted from assignment video clips
+
+# Train/val/test sets
+path: ../datasets/sports  # dataset root dir
+train: images/val  # using val images for train as well for simplicity in this demo
+val: images/val  # val images (relative to 'path')
+test:  # test images (optional)
+
+# Keypoints (Standard COCO keypoints)
+kpt_shape: [17, 3]  # number of keypoints, number of dims (2 for x,y or 3 for x,y,visible)
+flip_idx: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
+# Classes
+names:
+  0: person
